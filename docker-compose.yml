@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  bot:
+    image: ghcr.io/btwonion/roler:master
+    env_file:
+      - /home/onion/storage/roler-config.env
+    restart: unless-stopped
+    container_name: roler
