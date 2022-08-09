@@ -33,7 +33,7 @@ suspend fun main() {
     val roleCache = hashMapOf<String, ArrayList<Pair<String, String>>>()
 
     System.getenv().filter { it.key != "BOT_TOKEN" && it.key != "GUILD_ID" && it.key != "PWD" }.forEach {
-        if (it.value.endsWith("ID") || it.value.endsWith("EMOJI"))return@forEach
+        if (!it.value.endsWith("ID") || !it.value.endsWith("EMOJI"))return@forEach
         val splitted = it.key.split("_")
         val entry = roleCache[splitted[0]]
         if (entry == null) roleCache[splitted[0]] = arrayListOf(splitted[1] to it.value)
