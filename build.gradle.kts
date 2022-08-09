@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "dev.nyon"
-version = "1.0-SNAPSHOT"
+version = "1.0.1"
 
 repositories {
     mavenCentral()
@@ -17,7 +17,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("dev.nyon.roler.Roler")
+    mainClass.set("dev.nyon.roler.RolerKt")
 }
 
 tasks.withType<KotlinCompile> {
