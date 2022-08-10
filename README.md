@@ -7,7 +7,7 @@ To deploy I'm using Docker.
 
 ## Self Hosting
 You can use this bot by urself too. Simply pull the [latest docker image](https://github.com/btwonion/Roler/pkgs/container/roler) and create docker-compose.yml.
-<br>Additionally you have to create a env file that works as a config. Below you can see an example file. To create a role you have to add the role_id and role_emoji (as unicode) properties.
+<br>Additionally you have to create an .env file that works as a config. Below you can see an example file. To create a role you have to add the role_id and role_emoji properties.
 
 <details>
 <summary>.env</summary>
@@ -18,7 +18,7 @@ GUILD_ID=<YOURGUILDID>
 headquarter_id=1006559216280031372
 headquarter_emoji=<:kotlin_art:1006652061334655047>
 psst_id=1006951300543545434
-psst_emoji=\uD83D\uDCE9
+psst_emoji=📩
 ```
 
 </details>
@@ -26,7 +26,7 @@ psst_emoji=\uD83D\uDCE9
 <details>
 <summary>docker-compose.yml</summary>
 
-```properties
+```yaml
 version: "3"
 
 services:
