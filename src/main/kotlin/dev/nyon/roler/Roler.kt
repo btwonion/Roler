@@ -9,7 +9,9 @@ import dev.kord.common.entity.PresenceStatus
 import dev.kord.common.entity.optional.OptionalBoolean
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
+import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.event.gateway.ReadyEvent
+import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
@@ -47,7 +49,7 @@ suspend fun main() {
         val emojiPair = value.filter { it.first == "emoji" }[0]
         val idPair = value.filter { it.first == "id" }[0]
 
-        val emoji = if (emojiPair.second.startsWith("\\")) DiscordPartialEmoji(name = emojiPair.second)
+        val emoji = if (!emojiPair.second.startsWith("<")) DiscordPartialEmoji(name = emojiPair.second)
         else {
             val customSplitted = emojiPair.second.split(":")
             DiscordPartialEmoji(
