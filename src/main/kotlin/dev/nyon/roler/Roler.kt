@@ -33,7 +33,7 @@ suspend fun main() {
     val roleCache = hashMapOf<String, ArrayList<Pair<String, String>>>()
 
     System.getenv().filter { it.key != "BOT_TOKEN" && it.key != "GUILD_ID" && it.key != "PWD" }.forEach {
-        if (!it.value.endsWith("ID") || !it.value.endsWith("EMOJI"))return@forEach
+        if (!it.key.endsWith("_id") && !it.key.endsWith("_emoji")) return@forEach
         val splitted = it.key.split("_")
         val entry = roleCache[splitted[0]]
         if (entry == null) roleCache[splitted[0]] = arrayListOf(splitted[1] to it.value)
@@ -47,12 +47,15 @@ suspend fun main() {
         val emojiPair = value.filter { it.first == "emoji" }[0]
         val idPair = value.filter { it.first == "id" }[0]
 
-        val customSplitted = emojiPair.second.split(":")
-        val emoji = DiscordPartialEmoji(
-            animated = OptionalBoolean.Value(customSplitted[0] == "<a"),
-            name = customSplitted[1],
-            id = customSplitted[2].removeSuffix(">").snowflake
-        )
+        val emoji = if (emojiPair.second.startsWith("\\")) DiscordPartialEmoji(name = emojiPair.second)
+        else {
+            val customSplitted = emojiPair.second.split(":")
+            DiscordPartialEmoji(
+                customSplitted[2].removeSuffix(">").snowflake,
+                customSplitted[1],
+                OptionalBoolean.Value(customSplitted[0] == "<a")
+            )
+        }
 
         RoleEntry(idPair.second.snowflake, emoji, emojiPair.second)
     }
