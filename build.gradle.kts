@@ -4,6 +4,8 @@ plugins {
     kotlin("jvm") version "1.7.20"
     kotlin("plugin.serialization") version "1.7.20"
     application
+
+    id("com.github.breadmoirai.github-release") version "2.4.1"
 }
 
 group = "dev.nyon"
@@ -28,4 +30,14 @@ application {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "17"
+}
+
+githubRelease {
+    token(findProperty("github.token")?.toString())
+
+    val split = "btwonion/Roler".split("/")
+    owner(split[0])
+    repo(split[1])
+    tagName("v${project.version}")
+    body("Add mongo integration")
 }
