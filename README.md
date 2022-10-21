@@ -6,7 +6,7 @@ To deploy I'm using Docker.
 ![example.png](assets/example.png)
 
 ## Self Hosting
-You can use this bot by urself too. Simply pull the [latest docker image](https://github.com/btwonion/Roler/pkgs/container/roler) and create docker-compose.yml.
+You can use this bot by yourself too. Simply pull the [latest docker image](https://github.com/btwonion/Roler/pkgs/container/roler) and create docker-compose.yml.
 <br>Additionally you have to create an .env file that works as a config. Below you can see an example file. To create a role you have to add the role_id and role_emoji properties.
 
 <details>
@@ -15,10 +15,11 @@ You can use this bot by urself too. Simply pull the [latest docker image](https:
 ```properties
 BOT_TOKEN=<YOURBOTTOKEN>
 GUILD_ID=<YOURGUILDID>
-headquarter_id=1006559216280031372
-headquarter_emoji=<:kotlin_art:1006652061334655047>
-psst_id=1006951300543545434
-psst_emoji=📩
+MONGO_USERNAME=onion
+MONGO_ADDRESS=123.456.789.78
+MONGO_DATABASE=onion
+MONGO_PORT=27017
+MONGO_PASSWORD=MyGreatPassword123!
 ```
 
 </details>
@@ -40,8 +41,7 @@ services:
 
 </details>
 
-## 💸 Support
+### Other
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/I3I8F1WX4)
 
-<a href="https://www.buymeacoffee.com/btwonion" target="_blank">
-<img src="https://cdn.discordapp.com/attachments/1004824126973808763/1006253418303721575/Screenshot_2022-08-08_at_19-30-39_Dashboard_Buy_Me_a_Coffee.png" alt="Buy Me A Pizza" height="50px" width="207px">
-</a>
+If you need help with any of my mods just join my [discord server](https://nyon.dev/discord)
