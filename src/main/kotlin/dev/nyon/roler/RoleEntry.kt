@@ -1,11 +1,9 @@
 package dev.nyon.roler
 
-import dev.kord.common.entity.DiscordPartialEmoji
 import dev.kord.common.entity.Snowflake
-import dev.kord.core.entity.Role
+import kotlinx.serialization.Serializable
 
-data class RoleEntry(val id: Snowflake, val emoji: DiscordPartialEmoji, val emojiRaw: String) {
+@Serializable
+data class RoleEntry(val id: Snowflake, val emoji: String)
 
-    suspend fun getRole(): Role = guild.getRole(id)
-
-}
+suspend fun RoleEntry.getRole() = guild.getRole(id)

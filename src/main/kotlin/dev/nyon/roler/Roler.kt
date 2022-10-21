@@ -2,29 +2,37 @@ package dev.nyon.roler
 
 import dev.kord.cache.map.MapLikeCollection
 import dev.kord.cache.map.internal.MapEntryCache
-import dev.kord.common.entity.DiscordPartialEmoji
 import dev.kord.common.entity.Permission
 import dev.kord.common.entity.Permissions
 import dev.kord.common.entity.PresenceStatus
-import dev.kord.common.entity.optional.OptionalBoolean
 import dev.kord.core.Kord
 import dev.kord.core.entity.Guild
-import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.event.gateway.ReadyEvent
-import dev.kord.core.event.message.MessageCreateEvent
 import dev.kord.core.on
 import dev.kord.gateway.Intents
 import dev.kord.gateway.PrivilegedIntent
+import dev.kord.rest.builder.interaction.role
+import dev.kord.rest.builder.interaction.string
+import dev.nyon.roler.commands.buttonHandler
+import dev.nyon.roler.commands.commandHandler
+import dev.nyon.roler.commands.roleManageCommandHandler
+import dev.nyon.roler.commands.roleMessageUpdater
+import dev.nyon.roler.utils.initMongoDbs
+import dev.nyon.roler.utils.roleCollection
 import dev.nyon.roler.utils.snowflake
 
 
 lateinit var kord: Kord
-lateinit var roleEntries: List<RoleEntry>
+var roleEntries: ArrayList<RoleEntry> = arrayListOf()
 val guildID = System.getenv("GUILD_ID").snowflake
 lateinit var guild: Guild
 
 @OptIn(PrivilegedIntent::class)
 suspend fun main() {
+    initMongoDbs()
+    roleCollection.find().toFlow().collect {
+        roleEntries += it
+    }
 
     kord = Kord(System.getenv("BOT_TOKEN")) {
         cache {
@@ -32,39 +40,10 @@ suspend fun main() {
         }
     }
 
-    val roleCache = hashMapOf<String, ArrayList<Pair<String, String>>>()
-
-    System.getenv().filter { it.key != "BOT_TOKEN" && it.key != "GUILD_ID" && it.key != "PWD" }.forEach {
-        if (!it.key.endsWith("_id") && !it.key.endsWith("_emoji")) return@forEach
-        val splitted = it.key.split("_")
-        val entry = roleCache[splitted[0]]
-        if (entry == null) roleCache[splitted[0]] = arrayListOf(splitted[1] to it.value)
-        else {
-            entry += splitted[1] to it.value
-            roleCache[splitted[0]] = entry
-        }
-    }
-
-    roleEntries = roleCache.map { (_, value) ->
-        val emojiPair = value.filter { it.first == "emoji" }[0]
-        val idPair = value.filter { it.first == "id" }[0]
-
-        val emoji = if (!emojiPair.second.startsWith("<")) DiscordPartialEmoji(name = emojiPair.second)
-        else {
-            val customSplitted = emojiPair.second.split(":")
-            DiscordPartialEmoji(
-                customSplitted[2].removeSuffix(">").snowflake,
-                customSplitted[1],
-                OptionalBoolean.Value(customSplitted[0] == "<a")
-            )
-        }
-
-        RoleEntry(idPair.second.snowflake, emoji, emojiPair.second)
-    }
     kord.on<ReadyEvent> {
         kord.editPresence {
             status = PresenceStatus.Online
-            competing("your button clicks")
+            competing("the role arena")
         }
 
         guild = kord.getGuild(guildID) ?: error("Guild cannot be found!")
@@ -76,16 +55,26 @@ suspend fun main() {
         kord.createGuildMessageCommand(guildID, "Update Role Message") {
             defaultMemberPermissions = Permissions(Permission.Administrator)
         }
-
         kord.createGuildChatInputCommand(
             guildID, "sendrolemessage", "Sends the message where you can self-assign your roles!"
         ) {
             defaultMemberPermissions = Permissions(Permission.Administrator)
         }
 
+        kord.createGuildChatInputCommand(guildID, "removerole", "Removes the role from the database.") {
+            defaultMemberPermissions = Permissions(Permission.Administrator)
+            role("role", "The role to remove") { required = true }
+        }
+        kord.createGuildChatInputCommand(guildID, "addrole", "Adds the role to the database.") {
+            defaultMemberPermissions = Permissions(Permission.Administrator)
+            role("role", "The role to add") { required = true }
+            string("emoji", "The emoji for the role") { required = true }
+        }
+
         roleMessageUpdater
         commandHandler
         buttonHandler
+        roleManageCommandHandler
 
         println("Bot started!")
     }
@@ -93,5 +82,4 @@ suspend fun main() {
     kord.login {
         intents = Intents.all
     }
-
 }

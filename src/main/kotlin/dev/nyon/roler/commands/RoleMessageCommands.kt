@@ -1,12 +1,10 @@
-package dev.nyon.roler
+package dev.nyon.roler.commands
 
 import dev.kord.common.Color
 import dev.kord.common.entity.ButtonStyle
 import dev.kord.core.behavior.channel.createMessage
 import dev.kord.core.behavior.edit
 import dev.kord.core.behavior.interaction.response.respond
-import dev.kord.core.builder.components.emoji
-import dev.kord.core.entity.ReactionEmoji
 import dev.kord.core.event.interaction.GuildButtonInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildChatInputCommandInteractionCreateEvent
 import dev.kord.core.event.interaction.GuildMessageCommandInteractionCreateEvent
@@ -17,6 +15,11 @@ import dev.kord.rest.builder.message.create.actionRow
 import dev.kord.rest.builder.message.create.embed
 import dev.kord.rest.builder.message.modify.actionRow
 import dev.kord.rest.builder.message.modify.embed
+import dev.nyon.roler.getRole
+import dev.nyon.roler.guild
+import dev.nyon.roler.kord
+import dev.nyon.roler.roleEntries
+import dev.nyon.roler.utils.discordPartialEmoji
 import dev.nyon.roler.utils.snowflake
 
 val roleMessageUpdater = kord.on<GuildMessageCommandInteractionCreateEvent> {
@@ -84,7 +87,7 @@ private suspend fun ActionRowBuilder.generateButtons() {
     roleEntries.forEach {
         interactionButton(ButtonStyle.Secondary, "role_${it.id}") {
             label = it.getRole().name
-            emoji = it.emoji
+            emoji = it.emoji.discordPartialEmoji()
         }
     }
 }
