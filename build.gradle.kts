@@ -40,4 +40,5 @@ githubRelease {
     repo(split[1])
     tagName("v${project.version}")
     body("Add mongo integration")
+    targetCommitish("master")
 }
