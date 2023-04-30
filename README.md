@@ -2,6 +2,7 @@
 A Discord Bot using [Kord](https://github.com/kordlib/kord) and [Kotlin](https://kotlinlang.org) that adds a simple embed where you can pick roles.
 To deploy I'm using Docker.
 <br>This bot is used on my [Developer Discord](https://discord.gg/z5xBpunxH3).
+<br>Archived in favor of the new discord onboarding feature.
 
 ![example.png](assets/example.png)
 
